@@ -49,7 +49,6 @@ public class Venda {
     }
 
     public void listarItensVenda() {
-        int i = 0;
         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String nome = vendidoPara.getNome();
         String cpf = vendidoPara.getCpf();
@@ -60,14 +59,16 @@ public class Venda {
         System.out.printf("Atendente: %s %n", atendente);
         System.out.printf("Nome do Produto\t| Preço \t | Quantidade | Total%n");
         System.out.println("-----------------------------------------------------");
-
-        while (i < 4) {
+        for(int i =0;i<4;i++){
             String nomeP = ItensdeVenda[i].getProdutoVendido().getNome();
             int quantidade = ItensdeVenda[i].getQuantidade();
             double preco = ItensdeVenda[i].getProdutoVendido().getPreco();
             double precoTotal = ItensdeVenda[i].calcularTotal();
-            System.out.printf(Locale.US, "%10s\t\t| \tR$ %5.2f | %9d  | R$ %6.2f %n", nomeP, preco, quantidade, precoTotal);
-            i++;
+            System.out.printf("%s\t\t|", nomeP);
+            System.out.printf(Locale.US, " \tR$ %5.2f |", preco);
+            System.out.printf(Locale.US, " %9d  |", quantidade);
+            System.out.printf(Locale.US, " R$ %6.2f ", precoTotal);
+            System.out.println();
         }
         System.out.println("-----------------------------------------------------");
         System.out.printf(Locale.US, "Total da venda: \t\t\t\t\t\t\tR$ %.2f%n", calcularTotal());
