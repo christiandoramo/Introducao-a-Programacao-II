@@ -9,7 +9,7 @@ public class ItemVenda {
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
-    public Produto getProdutoVendido {
+    public Produto getProdutoVendido (){
         return produtoVendido;
     }
     public void setProdutoVendido(Produto produtoVendido) {

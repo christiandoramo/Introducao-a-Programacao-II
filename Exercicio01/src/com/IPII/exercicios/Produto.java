@@ -11,10 +11,11 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(int codigo, String nome, double preco) {
-        this.codigo = codigo;
+    public Produto(int codigo, String nome,String descricao ,double preco) {
+        this.descricao = descricao;
         this.nome = nome;
         this.preco = preco;
+        this.codigo = codigo;
     }
 
     public int getCodigo() {
