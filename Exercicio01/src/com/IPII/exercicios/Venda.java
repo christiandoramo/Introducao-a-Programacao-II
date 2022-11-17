@@ -2,14 +2,19 @@ package com.IPII.exercicios;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class Venda {
     private LocalDate data;
     private String atendente;
-    private ItemVenda[] ItensdeVenda = new ItemVenda[4];
+    private List<ItemVenda> ItensdeVenda;
     private Cliente vendidoPara;
-    private int registrados = 0;
+
+    public Venda(){
+        this.ItensdeVenda = new ArrayList();
+    }
 
     public LocalDate getData() {
         return data;
@@ -36,14 +41,13 @@ public class Venda {
     }
 
     public void adicionarItem(ItemVenda itemVenda) {
-        ItensdeVenda[registrados++] = itemVenda;
+        ItensdeVenda.add(itemVenda);
     }
 
     public double calcularTotal() {
         double total = 0;
-        int i = 0;
-        while (i < 4) {
-            total += ItensdeVenda[i++].calcularTotal();
+        for(ItemVenda item : ItensdeVenda){
+            total += item.calcularTotal();
         }
         return total;
     }
@@ -59,11 +63,11 @@ public class Venda {
         System.out.printf("Atendente: %s %n", atendente);
         System.out.printf("Nome do Produto\t| Preço \t | Quantidade | Total%n");
         System.out.println("-----------------------------------------------------");
-        for(int i =0;i<4;i++){
-            String nomeP = ItensdeVenda[i].getProdutoVendido().getNome();
-            int quantidade = ItensdeVenda[i].getQuantidade();
-            double preco = ItensdeVenda[i].getProdutoVendido().getPreco();
-            double precoTotal = ItensdeVenda[i].calcularTotal();
+        for(ItemVenda item : ItensdeVenda){
+            String nomeP = item.getProdutoVendido().getNome();
+            int quantidade = item.getQuantidade();
+            double preco = item.getProdutoVendido().getPreco();
+            double precoTotal = item.calcularTotal();
             System.out.printf("%s\t\t|", nomeP);
             System.out.printf(Locale.US, " \tR$ %5.2f |", preco);
             System.out.printf(Locale.US, " %9d  |", quantidade);

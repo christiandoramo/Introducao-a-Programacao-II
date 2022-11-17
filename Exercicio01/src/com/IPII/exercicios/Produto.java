@@ -7,15 +7,16 @@ public class Produto {
     private String nome;
     private String descricao;
     private double preco;
+    private static int numeroDeRegistros = 0;
 
     public Produto() {
     }
 
-    public Produto(int codigo, String nome,String descricao ,double preco) {
+    public Produto(String nome, String descricao, double preco) {
         this.descricao = descricao;
         this.nome = nome;
         this.preco = preco;
-        this.codigo = codigo;
+        codigo = ++numeroDeRegistros;
     }
 
     public int getCodigo() {

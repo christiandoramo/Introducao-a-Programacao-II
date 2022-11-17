@@ -6,11 +6,10 @@ public class TesteVendaMain {
     public static void main(String[] args) {
 
         // A --- instancia dos 4 objetos produtos
-        int id = 0; // ids/codigos
-        Produto prod1 = new Produto(++id, "Produto 0"+id, "descrição "+id, 10);
-        Produto prod2 = new Produto(++id, "Produto 0"+id, "descrição "+id, 5);
-        Produto prod3 = new Produto(++id, "Produto 0"+id, "descrição "+id, 20);
-        Produto prod4 = new Produto(++id, "Produto 0"+id, "descrição "+id, 15);
+        Produto prod1 = new Produto("Produto 01", "descrição 1", 10);
+        Produto prod2 = new Produto("Produto 02", "descrição 2", 5);
+        Produto prod3 = new Produto("Produto 03", "descrição 3", 20);
+        Produto prod4 = new Produto("Produto 04", "descrição 4", 15);
 
         // A --- instancia dos 4 objetos ItemVenda e o uso dos metodos setters
         ItemVenda Item1 = new ItemVenda();
