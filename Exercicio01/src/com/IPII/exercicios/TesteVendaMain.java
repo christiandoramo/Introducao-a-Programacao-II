@@ -31,7 +31,7 @@ public class TesteVendaMain {
 
         // A --- instancia de 1 objeto Venda e uso dos metodos setters
         Venda venda = new Venda();
-        LocalDate dataDaVenda = LocalDate.of(2020, 12, 23);
+        LocalDate dataDaVenda = LocalDate.now();
         venda.setData(dataDaVenda);
         venda.setAtendente("Maria Dolores Sampaio");
         venda.setVendidoPara(cliente);
