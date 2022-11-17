@@ -43,8 +43,8 @@ public class Cliente {
 
     public int calcularidade(LocalDate DataDaVenda) {
         // period.between recebe dois localdates
-//        Period period = Period.between(dataNascimento, LocalDate.now());
-        Period period = Period.between(dataNascimento, DataDaVenda);
+        Period period = Period.between(dataNascimento, LocalDate.now());
+      //  Period period = Period.between(dataNascimento, DataDaVenda);
         return period.getYears();
     }
 }
