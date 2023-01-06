@@ -1,6 +1,6 @@
 package questao03;
 
-public class Questao03letraB {
+public class TesteEstoqueMain {
 	public static void main(String[] args) {
 	}
 }
