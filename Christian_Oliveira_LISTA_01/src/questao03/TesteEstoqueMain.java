@@ -1,7 +1,32 @@
 package questao03;
 
+import java.util.ArrayList;
+
 public class TesteEstoqueMain {
 	public static void main(String[] args) {
+		int id = 0;
+		ArrayList<Estoque> estoques = new ArrayList<Estoque>();
+		// c)
+		Produto produto01 = new Produto(Integer.toString(++id), "Teclado");
+		Produto produto02 = new Produto(Integer.toString(++id), "Mouse");
+		Estoque estoque1 = new Estoque(produto01, 20, 15);
+		Estoque estoque2 = new Estoque(produto02, 30, 10);
+
+		estoques.add(estoque1);
+		estoques.add(estoque2);
+
+		// d)
+		estoque1.darBaixa(10);
+		estoque2.reporEstoque(19);
+		estoque1.relatorio();
+		estoque2.relatorio();
+		produto01.mudarNome("Teclado virtual");
+
+		// RELATORIO DO ESTOQUE ONDE HÁ O produto01
+		for (Estoque estoque : estoques) {
+			if (estoque.getProduto().getCodigo().equals("1"))
+				estoque.relatorio();
+		}
 	}
 }
 //3) Estoque (pontuação 40 pontos)

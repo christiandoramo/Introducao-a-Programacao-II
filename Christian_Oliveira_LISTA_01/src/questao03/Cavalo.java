@@ -23,7 +23,7 @@ public class Cavalo {
 						// agora 'x' apenas em região complementar ao tabuleiro
 					}
 				}
-				prob = 1 - probJogadasFora(x + 3, y + 3, k, 0, 8, prob);
+				prob = probJogadas(x + 3, y + 3, k, 0, 1, prob);
 			} else {
 				prob = 1f;
 			}
@@ -31,54 +31,54 @@ public class Cavalo {
 		return prob;
 	}
 
-	private double probJogadasFora(int x, int y, int k, int jogadasFora, int jogadasPossiveis, double prob) {
-		prob = 1f;
+	private double probJogadas(int x, int y, int k, int jogadasDentro, int jogadasPossiveis, double prob) {
+		prob = 1.0;
+		jogadasPossiveis *= 8;
 		k--;
-		// L em formato cima para baixo
-		if (matrizTotal[x + 3][y + 1] == 'x') {
-			jogadasFora++;
-		} else if (k > 0) {
-			prob += probJogadasFora(x + 3, y + 1, k, jogadasFora, jogadasPossiveis * 8, prob);
-		}
-		if (matrizTotal[x + 3][y - 1] == 'x') {
-			jogadasFora++;
-		} else if (k > 0) {
-			probJogadasFora(x + 3, y - 1, k, jogadasFora, jogadasPossiveis * 8, prob);
-		}
-		if (matrizTotal[x - 3][y + 1] == 'x') {
-			jogadasFora++;
-		} else if (k > 0) {
-			prob += probJogadasFora(x - 3, y + 1, k, jogadasFora, jogadasPossiveis * 8, prob);
-		}
-		if (matrizTotal[x - 3][y - 1] == 'x') {
-			jogadasFora++;
-		} else if (k > 0) {
-			prob += probJogadasFora(x - 3, y - 1, k, jogadasFora, jogadasPossiveis * 8, prob);
-		}
-
-		// L em formato baixo para cima
-		if (matrizTotal[x + 1][y + 3] == 'x') {
-			jogadasFora++;
-		} else if (k > 0) {
-			prob += probJogadasFora(x + 1, y + 3, k, jogadasFora, jogadasPossiveis * 8, prob);
-		}
-		if (matrizTotal[x + 1][y - 3] == 'x') {
-			jogadasFora++;
-		} else if (k > 0) {
-			prob += probJogadasFora(x + 1, y - 3, k, jogadasFora, jogadasPossiveis * 8, prob);
-		}
-		if (matrizTotal[x - 1][y + 3] == 'x') {
-			jogadasFora++;
-		} else if (k > 0) {
-			prob += probJogadasFora(x - 1, y + 3, k, jogadasFora, jogadasPossiveis * 8, prob);
-		}
-		if (matrizTotal[x - 1][y - 3] == 'x') {
-			jogadasFora++;
-		} else if (k > 0) {
-			prob += probJogadasFora(x - 1, y - 3, k, jogadasFora, jogadasPossiveis * 8, prob);
-		}
-		prob *= (double) jogadasFora / (double) jogadasPossiveis;
+		// bools "está dentro do tabuleiro?" para cada posicao
+		Boolean direita3baixo1 = matrizTotal[x + 3][y + 1] == '-';
+		Boolean direita3cima1 = matrizTotal[x + 3][y - 1] == '-';
+		Boolean esquerda3baixo1 = matrizTotal[x - 3][y + 1] == '-';
+		Boolean esquerda3cima1 = matrizTotal[x - 3][y - 1] == '-';
+		Boolean direita1baixo3 = matrizTotal[x + 1][y + 3] == '-';
+		Boolean direita1cima3 = matrizTotal[x + 1][y - 3] == '-';
+		Boolean esquerda1baixo3 = matrizTotal[x - 1][y + 3] == '-';
+		Boolean esquerda1cima3 = matrizTotal[x - 1][y - 3] == '-';
+		// jogadasDentro de cada prob interna
+		if (direita3baixo1)
+			jogadasDentro++;
+		if (direita3cima1)
+			jogadasDentro++;
+		if (esquerda3baixo1)
+			jogadasDentro++;
+		if (esquerda3cima1)
+			jogadasDentro++;
+		if (direita1baixo3)
+			jogadasDentro++;
+		if (direita1cima3)
+			jogadasDentro++;
+		if (esquerda1baixo3)
+			jogadasDentro++;
+		if (esquerda1cima3)
+			jogadasDentro++;
+		// acumula prob total com probJogadas
+		if (direita3baixo1 && k > 0)
+			prob += probJogadas(x + 3, y + 1, k, jogadasDentro, jogadasPossiveis, prob);
+		if (direita3cima1 && k > 0)
+			prob += probJogadas(x + 3, y - 1, k, jogadasDentro, jogadasPossiveis, prob);
+		if (esquerda3baixo1 && k > 0)
+			prob += probJogadas(x - 3, y + 1, k, jogadasDentro, jogadasPossiveis, prob);
+		if (esquerda3cima1 && k > 0)
+			prob += probJogadas(x - 3, y - 1, k, jogadasDentro, jogadasPossiveis, prob);
+		if (direita1baixo3 && k > 0)
+			prob += probJogadas(x + 1, y + 3, k, jogadasDentro, jogadasPossiveis, prob);
+		if (direita1cima3 && k > 0)
+			prob += probJogadas(x + 1, y - 3, k, jogadasDentro, jogadasPossiveis, prob);
+		if (esquerda1baixo3 && k > 0)
+			prob += probJogadas(x - 1, y + 3, k, jogadasDentro, jogadasPossiveis, prob);
+		if (esquerda1cima3 && k > 0)
+			prob += probJogadas(x - 1, y - 3, k, jogadasDentro, jogadasPossiveis, prob);
+		prob *= ((double) jogadasDentro / (double) jogadasPossiveis);
 		return prob;
 	}
 }
-
