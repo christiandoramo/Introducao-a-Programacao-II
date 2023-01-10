@@ -1,7 +1,41 @@
 package questao05;
 
-public class Questao05 {
+import java.time.LocalDate;
 
+import questao05.Enums.*;
+
+public class Questao05 {
+	public static void main(String[] args) {
+		RelacaoVacinados rlv = new RelacaoVacinados();
+		Vacina coronavac = new Vacina(VACINAS.CORONAVAC, "23ºLOTE");
+		Vacina oxford = new Vacina(VACINAS.OXFORD, "5ºLOTE");
+		Pessoa pessoa1 = new Pessoa("0333787383", "José Maria", LocalDate.now().minusYears(67), GRUPOS.IDOSOS);
+		Pessoa pessoa2 = new Pessoa("3830333787", "Maria José", LocalDate.now().minusYears(69), GRUPOS.IDOSOS);
+		Pessoa pessoa3 = new Pessoa("7870333383", "José Silva", LocalDate.now().minusYears(71), GRUPOS.IDOSOS);
+		Pessoa pessoa4 = new Pessoa("3787303383", "Maria Silva", LocalDate.now().minusYears(66), GRUPOS.IDOSOS);
+		RegistroVacina rgv1 = new RegistroVacina(rlv.getRegistros(), LocalDate.of(2021, 5, 13).minusDays(21),
+				"Drauzzio Vareola", 1, LOCAIS.CENTRODEVACINACAOCOMPAZARIANOSUASSUNA, coronavac, pessoa1);
+		RegistroVacina rgv2 = new RegistroVacina(rlv.getRegistros(), LocalDate.of(2021, 5, 16).minusDays(21),
+				"Drauzio Variola", 1, LOCAIS.CENTRODEVACINACAOPARQUEDEEXPOSICAO, oxford, pessoa2);
+		RegistroVacina rgv3 = new RegistroVacina(rlv.getRegistros(), LocalDate.of(2021, 5, 15).minusDays(21),
+				"Drazio Varella", 1, LOCAIS.DRIVETHRUPARQUEDEEXPOSICAO, coronavac, pessoa3);
+		RegistroVacina rgv4 = new RegistroVacina(rlv.getRegistros(), LocalDate.of(2021, 5, 21).minusDays(21),
+				"Drauzio Varela", 1, LOCAIS.DRIVETHRUUFRPE, oxford, pessoa4);
+		// 5 maiores de 65 anos e vacinados com 2 doses
+		Pessoa pessoa5 = new Pessoa("1111111111", "Jefferson Caminhões", LocalDate.now().minusYears(100),
+				GRUPOS.TRABALHADORESDASAUDE);
+		RegistroVacina rgv5 = new RegistroVacina(rlv.getRegistros(), LocalDate.of(2021, 5, 13).minusDays(21),
+				"Drauziu Variolo", 1, LOCAIS.DRIVETHRUARRUDA, oxford, pessoa5);
+		RegistroVacina rgv6 = new RegistroVacina(rlv.getRegistros(), LocalDate.of(2021, 5, 13).minusDays(21),
+				"Drawzio Variela", 2, LOCAIS.CENTRODEVACINACAOCOMPAZARIANOSUASSUNA, coronavac, pessoa5);
+		rlv.adicionar(rgv1);
+		rlv.adicionar(rgv2);
+		rlv.adicionar(rgv3);
+		rlv.adicionar(rgv4);
+		rlv.adicionar(rgv5);
+		rlv.adicionar(rgv6);
+		rlv.relatorio();
+	}
 }
 
 //5) Classes e relacionamentos (pontuação total 160 pontos)
@@ -10,7 +44,7 @@ public class Questao05 {
 //● (10 pts) Vacina
 //○ implemente os métodos get/set para cada atributo
 //○ valores possíveis para o atributo nome:
-//■ CORONAVAC
+//■ CORONAVAC+
 //■ OXFORD
 //● (20 pts) Pessoa
 //○ implemente os métodos get/set para cada atributo

@@ -14,7 +14,7 @@ public class Questao04 {
 		// um objeto do tipo apropriado que será usado em outras partes do seu programa
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Digite a data uma data no formato \"dia/mes/ano\"");
-		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy").withZone(ZoneId.systemDefault());
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate dataLocal = LocalDate.parse(scanner.nextLine(), formatador);
 		LocalDateTime tempo = dataLocal.atTime(0, 0);// at(0,0) para igualar a hora
 		String dataString = formatador.format(dataLocal);
@@ -47,9 +47,11 @@ public class Questao04 {
 		// através da invocação do método
 		formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		System.out.println("Digite a data 1 (formato: dia/mes/ano)");
-		LocalDate data1 = LocalDate.parse(scanner.nextLine(), formatador);
+		String dat1 = scanner.nextLine();
+		LocalDate data1 = LocalDate.parse(dat1, formatador);
 		System.out.println("Digite a data 2 (formato: dia/mes/ano)");
-		LocalDate data2 = LocalDate.parse(scanner.nextLine(), formatador);
+		String dat2 = scanner.nextLine();
+		LocalDate data2 = LocalDate.parse(dat2, formatador);
 		scanner.close();
 		Integer diasUteis = calculaTotalDiasUteis(data1, data2);
 		System.out.println("O total de dias úteis de " + data1.format(formatador) + " e " + data2.format(formatador)
@@ -58,8 +60,9 @@ public class Questao04 {
 	}
 
 	static private Integer calculaTotalDiasUteis(LocalDate data1, LocalDate data2) {
-		Duration dur = Duration.between(data1.atTime(0, 0), data2.atTime(0, 0));
-		int diferenca = Math.abs((int) dur.toDays());
+		Period per = Period.between(data1, data2);
+		// diferente de duration, contabiliza o calendario ISO-8601
+		int diferenca = Math.abs(per.getDays());
 		int diasUteis = 0;
 		for (int dia = 0; dia <= diferenca; dia++) {
 			// deverá checar dias uteis """contidos""" entre data1 e data2, logo checa em
