@@ -1,0 +1,5 @@
+package questao05.Enums;
+
+public enum GRUPOS {
+	IDOSOS, TRABALHADORESDASAUDE, OUTRASPRIORIDADES;
+}
