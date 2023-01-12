@@ -8,11 +8,11 @@ public class Game {
 	private String produtora;
 	private String ano;
 	private String publicadora;
+	private float receita;
 	private Estado estado;
 	private Genero genero;
 
-	public Game(String codigo, String nome, String produtora, String ano, String publicadora, Genero genero,
-			float valor, Estado estado) {
+	public Game(String codigo, String nome, String produtora, String ano, String publicadora, Genero genero, Estado estado) {
 		this.nome = nome;
 		this.codigo = codigo;
 		this.produtora = produtora;
@@ -24,6 +24,14 @@ public class Game {
 
 	public String getNome() {
 		return nome;
+	}
+
+	public float getReceita() {
+		return receita;
+	}
+
+	public void setReceita(float receita) {
+		this.receita = receita;
 	}
 
 	public String getCodigo() {

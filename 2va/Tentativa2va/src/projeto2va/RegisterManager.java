@@ -8,21 +8,35 @@ import java.util.function.Consumer;
 // Sistema de Registros de Vendas, Emprestados, e Disponiveis != Games em si
 public class RegisterManager {
 
-	private List<RegistroGame> gamesParaVender = new ArrayList<>();
-	private List<RegistroGame> gamesParaAlugar = new ArrayList<>();
+	public List<RegistroGame> gamesParaVender = new ArrayList<>();
+	public List<RegistroGame> gamesParaAlugar = new ArrayList<>();
+	public int registradosVendiveis = 0;
+	public int registradosAlugaveis = 0;
+	public int registradosGames = 0;
 
 	public int qteGameAVenda(String nome) {
-		int sum = gamesParaVender.stream().filter(
-				x -> x.getGame().getEstado().equals(Estado.VendaDisponivel) && x.getGame().getNome().equals(nome))
-				.toList().size();
+		int sum = 0;
+		try {
+			sum = gamesParaVender.stream().filter(
+					x -> x.getGame().getEstado().equals(Estado.VendaDisponivel) && x.getGame().getNome().equals(nome))
+					.toList().size();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 		return sum;
 	}
 
 	public int qteGameAlugavel(String nome) {
-		int sum = gamesParaAlugar.stream().filter(
-				x -> x.getGame().getEstado().equals(Estado.AluguelDisponivel) && x.getGame().getNome().equals(nome))
-				.toList().size();
+		int sum = 0;
+		try {
+			sum = gamesParaAlugar.stream().filter(
+					x -> x.getGame().getEstado().equals(Estado.AluguelDisponivel) && x.getGame().getNome().equals(nome))
+					.toList().size();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 		return sum;
+
 	}
 	// C - create R - read U - update D - delete
 
@@ -43,7 +57,7 @@ public class RegisterManager {
 	// READ
 	// ###############################################################################
 
-	public void mostrarGames() {
+	public void mostrarGamesDisponiveis() {
 		mostrarGamesAlugaveis();
 		mostarGamesAVenda();
 	}
@@ -77,7 +91,6 @@ public class RegisterManager {
 		for (RegistroGame registroGame : gamesCompraveis) {
 			int quantidade = qteGameAVenda(registroGame.getGame().getNome());
 			System.out.println(registroGame + " Quantidade: " + quantidade);
-
 		}
 	}
 
@@ -94,24 +107,50 @@ public class RegisterManager {
 	// UPDATE
 	// ###############################################################################
 
-	public void atualizarNomedeUmAVenda(String nome) {
+	public void atualizarNomedeUmAVenda(String antigo, String nome) {
+		List<RegistroGame> gameXs = gamesParaVender.stream().filter(x -> x.getGame().getNome().equals(antigo)).toList();
 		Consumer<RegistroGame> consumer = x -> x.getGame().setNome(nome);
-		gamesParaVender.forEach(consumer);
+		if (!gameXs.isEmpty()) {
+			gameXs.forEach(consumer);
+			System.out.println("nome trocado com sucesso");
+		} else {
+			System.out.println("Erro: Nome não encontrado");
+		}
 	}
 
-	public void atualizarNomedeUmAlugavel(String nome) {
+	public void atualizarNomedeUmAlugavel(String antigo, String nome) {
+		List<RegistroGame> gameXs = gamesParaAlugar.stream().filter(x -> x.getGame().getNome().equals(antigo)).toList();
 		Consumer<RegistroGame> consumer = x -> x.getGame().setNome(nome);
-		gamesParaAlugar.forEach(consumer);
+		if (!gameXs.isEmpty()) {
+			gameXs.forEach(consumer);
+			System.out.println("nome trocado com sucesso");
+		} else {
+			System.out.println("Erro: Nome não encontrado");
+		}
 	}
 
-	public void atualizarPrecodeUmAVenda(float preco) {
+	public void atualizarPrecodeUmAVenda(String nome, float preco) {
 		Consumer<RegistroGame> consumer = x -> x.setPreco(preco);
 		gamesParaVender.forEach(consumer);
+		List<RegistroGame> gameXs = gamesParaVender.stream().filter(x -> x.getGame().getNome().equals(nome)).toList();
+		if (!gameXs.isEmpty()) {
+			gameXs.forEach(consumer);
+			System.out.println("preco trocado com sucesso");
+		} else {
+			System.out.println("Erro: Nome não encontrado");
+		}
 	}
 
-	public void atualizarPrecodeUmAlugavel(float preco) {
+	public void atualizarPrecodeUmAlugavel(String nome, float preco) {
 		Consumer<RegistroGame> consumer = x -> x.setPreco(preco);
-		gamesParaAlugar.forEach(consumer);
+		gamesParaVender.forEach(consumer);
+		List<RegistroGame> gameXs = gamesParaAlugar.stream().filter(x -> x.getGame().getNome().equals(nome)).toList();
+		if (!gameXs.isEmpty()) {
+			gameXs.forEach(consumer);
+			System.out.println("preco trocado com sucesso");
+		} else {
+			System.out.println("Erro: Nome não encontrado");
+		}
 	}
 	// DELETE
 	// ###############################################################################

@@ -1,5 +1,5 @@
 package projeto2va;
 
 public enum Estado{
-	Alugado, Vendido, VendaDisponivel, AluguelDisponivel, AluguelEVendaDisponivel;
+	Alugado, Vendido, VendaDisponivel, AluguelDisponivel;
 }
