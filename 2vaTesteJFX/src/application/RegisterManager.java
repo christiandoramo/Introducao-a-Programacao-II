@@ -1,23 +1,18 @@
-package projeto2va;
+package application;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 // Sistema de Registros de Vendas, Emprestados, e Disponiveis != Games em si
 public class RegisterManager {
 
-	public List<RegistroGame> gamesParaVender = new ArrayList<>();
-	public List<RegistroGame> gamesParaAlugar = new ArrayList<>();
-	public int registradosVendiveis = 0;
-	public int registradosAlugaveis = 0;
-	public int registradosGames = 0;
+	public List<RegistroGame> allGames = new ArrayList<>();
 
 	public int qteGameAVenda(String nome) {
 		int sum = 0;
 		try {
-			sum = gamesParaVender.stream().filter(
+			sum = allGames.stream().filter(
 					x -> x.getGame().getEstado().equals(Estado.VendaDisponivel) && x.getGame().getNome().equals(nome))
 					.toList().size();
 		} catch (Exception e) {
@@ -29,7 +24,7 @@ public class RegisterManager {
 	public int qteGameAlugavel(String nome) {
 		int sum = 0;
 		try {
-			sum = gamesParaAlugar.stream().filter(
+			sum = allGames.stream().filter(
 					x -> x.getGame().getEstado().equals(Estado.AluguelDisponivel) && x.getGame().getNome().equals(nome))
 					.toList().size();
 		} catch (Exception e) {
@@ -45,12 +40,12 @@ public class RegisterManager {
 
 	public void addRegistroVenda(RegistroGame rg) {
 		rg.getGame().setEstado(Estado.VendaDisponivel);
-		gamesParaVender.add(rg);
+		allGames.add(rg);
 	}
 
 	public void addRegistroAluguel(RegistroGame rg) {
 		rg.getGame().setEstado(Estado.AluguelDisponivel);
-		gamesParaAlugar.add(rg);
+		allGames.add(rg);
 
 	}
 
@@ -63,44 +58,69 @@ public class RegisterManager {
 	}
 
 	public void mostrarTodoOsRegistros() {
-		int index = 0;
-		for (RegistroGame game : gamesParaAlugar)
-			System.out.println(++index + ": " + game);
-		for (RegistroGame game : gamesParaVender)
-			System.out.println(++index + ": " + game);
+		List<RegistroGame> alugaveis = allGames.stream()
+				.filter(x -> x.getGame().getEstado().equals(Estado.AluguelDisponivel)).toList();
+		List<RegistroGame> alugados = allGames.stream().filter(x -> x.getGame().getEstado().equals(Estado.Alugado))
+				.toList();
+		List<RegistroGame> vendiveis = allGames.stream()
+				.filter(x -> x.getGame().getEstado().equals(Estado.VendaDisponivel)).toList();
+		List<RegistroGame> vendidos = allGames.stream().filter(x -> x.getGame().getEstado().equals(Estado.Vendido))
+				.toList();
+		for (RegistroGame b : alugados)
+			System.out.println(b + "usuario: " + b.getUsuario() + " receita Total: " + b.getGame().getReceita());
+		for (RegistroGame d : vendidos)
+			System.out.println(d + " usuario: " + d.getUsuario() + " receita Total: " + d.getGame().getReceita());
+		for (RegistroGame c : vendiveis)
+			System.out.println(c);
+		for (RegistroGame a : alugaveis)
+			System.out.println(a);
 	}
 
 	public void buscarUmGame(String nome) {
 		// buscar um vendivel e um compravel e mostrar a quantidade e status
-		List<RegistroGame> gameVendiveis = gamesParaVender.stream().filter(
+		List<RegistroGame> gameVendiveis = allGames.stream().filter(
 				x -> x.getGame().getEstado().equals(Estado.VendaDisponivel) && x.getGame().getNome().equals(nome))
 				.toList();
-		List<RegistroGame> gameAlugaveis = (gamesParaAlugar.stream().filter(
+		List<RegistroGame> gameAlugaveis = (allGames.stream().filter(
 				x -> x.getGame().getEstado().equals(Estado.AluguelDisponivel) && x.getGame().getNome().equals(nome))
 				.toList());
 		int quantidade = gameVendiveis.size();
-		System.out.println(gameVendiveis.get(0) + " Quantidade: " + quantidade);
+		if (quantidade > 0)
+			System.out.println(gameVendiveis.get(0) + " Quantidade: " + quantidade);
 		quantidade = gameAlugaveis.size();
-		System.out.println(gameAlugaveis.get(0) + " Quantidade: " + quantidade);
+		if (quantidade > 0)
+			System.out.println(gameAlugaveis.get(0) + " Quantidade: " + quantidade);
 	}
 
 	public void mostarGamesAVenda() {
-		@SuppressWarnings("unchecked")
-		Set<RegistroGame> gamesCompraveis = (Set<RegistroGame>) gamesParaVender.stream()
+		List<RegistroGame> gamesCompraveis = allGames.stream()
 				.filter(x -> x.getGame().getEstado().equals(Estado.VendaDisponivel)).toList();
-		for (RegistroGame registroGame : gamesCompraveis) {
-			int quantidade = qteGameAVenda(registroGame.getGame().getNome());
-			System.out.println(registroGame + " Quantidade: " + quantidade);
+
+		if(!gamesCompraveis.isEmpty()) {
+			gamesCompraveis = gamesCompraveis.stream().distinct().toList();
+			for (RegistroGame registroGame : gamesCompraveis) {
+				int quantidade = qteGameAVenda(registroGame.getGame().getNome());
+				System.out.println(registroGame + " Quantidade: " + quantidade);
+			}
+		}else {
+			System.out.println("Sem jogos a venda disponiveis");
 		}
 	}
 
 	public void mostrarGamesAlugaveis() {
-		@SuppressWarnings("unchecked")
-		Set<RegistroGame> gamesAlugaveis = (Set<RegistroGame>) gamesParaAlugar.stream()
+		List<RegistroGame> gamesAlugaveis = allGames.stream()
 				.filter(x -> x.getGame().getEstado().equals(Estado.AluguelDisponivel)).toList();
-		for (RegistroGame registroGame : gamesAlugaveis) {
-			System.out.println(registroGame + " Quantidade: ");
+		if(!gamesAlugaveis.isEmpty()) {
+			gamesAlugaveis = gamesAlugaveis.stream().distinct().toList();
+			for (RegistroGame registroGame : gamesAlugaveis) {
+				int quantidade = qteGameAVenda(registroGame.getGame().getNome());
+				System.out.println(registroGame + " Quantidade: " + quantidade);
+			}
 		}
+		else {
+			System.out.println("Sem jogos alugaveis disponiveis");
+		}
+
 
 	}
 
@@ -108,7 +128,7 @@ public class RegisterManager {
 	// ###############################################################################
 
 	public void atualizarNomedeUmAVenda(String antigo, String nome) {
-		List<RegistroGame> gameXs = gamesParaVender.stream().filter(x -> x.getGame().getNome().equals(antigo)).toList();
+		List<RegistroGame> gameXs = allGames.stream().filter(x -> x.getGame().getNome().equals(antigo)).toList();
 		Consumer<RegistroGame> consumer = x -> x.getGame().setNome(nome);
 		if (!gameXs.isEmpty()) {
 			gameXs.forEach(consumer);
@@ -119,7 +139,7 @@ public class RegisterManager {
 	}
 
 	public void atualizarNomedeUmAlugavel(String antigo, String nome) {
-		List<RegistroGame> gameXs = gamesParaAlugar.stream().filter(x -> x.getGame().getNome().equals(antigo)).toList();
+		List<RegistroGame> gameXs = allGames.stream().filter(x -> x.getGame().getNome().equals(antigo)).toList();
 		Consumer<RegistroGame> consumer = x -> x.getGame().setNome(nome);
 		if (!gameXs.isEmpty()) {
 			gameXs.forEach(consumer);
@@ -131,8 +151,8 @@ public class RegisterManager {
 
 	public void atualizarPrecodeUmAVenda(String nome, float preco) {
 		Consumer<RegistroGame> consumer = x -> x.setPreco(preco);
-		gamesParaVender.forEach(consumer);
-		List<RegistroGame> gameXs = gamesParaVender.stream().filter(x -> x.getGame().getNome().equals(nome)).toList();
+		allGames.forEach(consumer);
+		List<RegistroGame> gameXs = allGames.stream().filter(x -> x.getGame().getNome().equals(nome)).toList();
 		if (!gameXs.isEmpty()) {
 			gameXs.forEach(consumer);
 			System.out.println("preco trocado com sucesso");
@@ -143,8 +163,8 @@ public class RegisterManager {
 
 	public void atualizarPrecodeUmAlugavel(String nome, float preco) {
 		Consumer<RegistroGame> consumer = x -> x.setPreco(preco);
-		gamesParaVender.forEach(consumer);
-		List<RegistroGame> gameXs = gamesParaAlugar.stream().filter(x -> x.getGame().getNome().equals(nome)).toList();
+		allGames.forEach(consumer);
+		List<RegistroGame> gameXs = allGames.stream().filter(x -> x.getGame().getNome().equals(nome)).toList();
 		if (!gameXs.isEmpty()) {
 			gameXs.forEach(consumer);
 			System.out.println("preco trocado com sucesso");
@@ -156,14 +176,21 @@ public class RegisterManager {
 	// ###############################################################################
 
 	public void removerUmGameAlugavel(String nome) {
-		List<RegistroGame> listaDeRemovidos = gamesParaAlugar.stream().filter(x -> x.getGame().getNome().equals(nome))
+		List<RegistroGame> listaDeRemovidos = allGames.stream().filter(x -> x.getGame().getNome().equals(nome))
 				.toList();
-		gamesParaAlugar.removeAll(listaDeRemovidos);
+		if (listaDeRemovidos.size() > 0)
+			allGames.removeAll(listaDeRemovidos);
+		else
+			System.out.println("Erro: Jogo não encontrado");
+
 	}
 
 	public void removerUmGameAVenda(String nome) {
-		List<RegistroGame> listaDeRemovidos = gamesParaVender.stream().filter(x -> x.getGame().getNome().equals(nome))
+		List<RegistroGame> listaDeRemovidos = allGames.stream().filter(x -> x.getGame().getNome().equals(nome))
 				.toList();
-		gamesParaVender.removeAll(listaDeRemovidos);
+		if (listaDeRemovidos.size() > 0)
+			allGames.removeAll(listaDeRemovidos);
+		else
+			System.out.println("Erro: Jogo não encontrado");
 	}
 }

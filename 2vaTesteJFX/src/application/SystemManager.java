@@ -1,4 +1,4 @@
-package projeto2va;
+package application;
 
 import java.util.List;
 import java.util.Scanner;
@@ -92,7 +92,9 @@ public class SystemManager {
 			if (opcao == 1) {
 				System.out.print("Registre o nome do game para venda: ");
 				String nome = sc.nextLine();
-				List<RegistroGame> regs = rm.gamesParaVender.stream().filter(x -> x.getGame().getNome().equals(nome))
+				List<RegistroGame> regs = rm.allGames.stream()
+						.filter(x -> x.getGame().getEstado().equals(Estado.VendaDisponivel)
+								&& x.getGame().getNome().equals(nome))
 						.toList();
 				RegistroGame gameX = !regs.isEmpty() ? regs.get(0) : null;
 				System.out.print("Insira a quantidade: ");
@@ -110,9 +112,9 @@ public class SystemManager {
 					System.out.print("Insira o preço do produto: ");
 					float preco = Float.parseFloat(sc.nextLine());
 					for (int i = 0; i < qte; i++) {
-						Game game = new Game("" + (++rm.registradosGames), nome, produtora, ano, publicadora, genero,
+						Game game = new Game("" + (rm.allGames.size() + 1), nome, produtora, ano, publicadora, genero,
 								Estado.VendaDisponivel);
-						RegistroGame rv = new RegistroGame(++rm.registradosVendiveis, game, usuario, preco);
+						RegistroGame rv = new RegistroGame(rm.allGames.size() + 1, game, preco);
 						rm.addRegistroVenda(rv);
 					}
 					System.out.println(qte + " unidade(s) do jogo " + nome + " inserida(s) com sucesso");
@@ -121,10 +123,10 @@ public class SystemManager {
 				// registrado gameX
 				else {
 					for (int i = 0; i < qte; i++) {
-						Game game = new Game("" + (++rm.registradosGames), gameX.getGame().getNome(),
+						Game game = new Game("" + (rm.allGames.size() + 1), gameX.getGame().getNome(),
 								gameX.getGame().getProdutora(), gameX.getGame().getAno(),
 								gameX.getGame().getPublicadora(), gameX.getGame().getGenero(), Estado.VendaDisponivel);
-						RegistroGame rv = new RegistroGame(++rm.registradosVendiveis, game, usuario, gameX.getPreco());
+						RegistroGame rv = new RegistroGame(rm.allGames.size(), game, gameX.getPreco());
 						rm.addRegistroVenda(rv);
 					}
 					System.out.println(qte + " unidade(s) do jogo " + nome + " inserida(s) com sucesso");
@@ -133,7 +135,9 @@ public class SystemManager {
 				System.out.print("Registre o nome do game alugavel: ");
 				String nome = sc.nextLine();
 				cB();
-				List<RegistroGame> regs = rm.gamesParaAlugar.stream().filter(x -> x.getGame().getNome().equals(nome))
+				List<RegistroGame> regs = rm.allGames.stream()
+						.filter(x -> x.getGame().getEstado().equals(Estado.AluguelDisponivel)
+								&& x.getGame().getNome().equals(nome))
 						.toList();
 				RegistroGame gameX = !regs.isEmpty() ? regs.get(0) : null;
 				System.out.print("Insira a quantidade: ");
@@ -155,19 +159,19 @@ public class SystemManager {
 					System.out.print("Insira o preço do produto: ");
 					float preco = Float.parseFloat(sc.nextLine());
 					for (int i = 0; i < qte; i++) {
-						Game game = new Game("" + (++rm.registradosGames), nome, produtora, ano, publicadora, genero,
+						Game game = new Game("" + (rm.allGames.size() + 1), nome, produtora, ano, publicadora, genero,
 								Estado.AluguelDisponivel);
-						RegistroGame rv = new RegistroGame(++rm.registradosAlugaveis, game, usuario, preco);
+						RegistroGame rv = new RegistroGame(rm.allGames.size() + 1, game, preco);
 						rm.addRegistroVenda(rv);
 					}
 					System.out.println(qte + " unidade(s) do jogo " + nome + " inserida(s) com sucesso");
 				} else {
 					for (int i = 0; i < qte; i++) {
-						Game game = new Game("" + (++rm.registradosGames), gameX.getGame().getNome(),
+						Game game = new Game("" + (rm.allGames.size() + 1), gameX.getGame().getNome(),
 								gameX.getGame().getProdutora(), gameX.getGame().getAno(),
 								gameX.getGame().getPublicadora(), gameX.getGame().getGenero(),
 								Estado.AluguelDisponivel);
-						RegistroGame rv = new RegistroGame(++rm.registradosAlugaveis, game, usuario, gameX.getPreco());
+						RegistroGame rv = new RegistroGame(rm.allGames.size() + 1, game, gameX.getPreco());
 						rm.addRegistroVenda(rv);
 					}
 					System.out.println(qte + " unidade(s) do jogo " + nome + " inserida(s) com sucesso");
@@ -254,14 +258,12 @@ public class SystemManager {
 	// ###############################################################################
 
 	public void vender(String entrada, User usuario, int qte) {
-		List<RegistroGame> gameVendiveis = rm.gamesParaVender.stream().filter(
+		List<RegistroGame> gameVendiveis = rm.allGames.stream().filter(
 				x -> x.getGame().getEstado().equals(Estado.VendaDisponivel) && x.getGame().getNome().equals(entrada))
 				.toList();
 		if (gameVendiveis.isEmpty()) {
-			gameVendiveis = rm.gamesParaVender.stream()
-					.filter(x -> x.getGame().getEstado().equals(Estado.VendaDisponivel)
-							&& x.getGame().getCodigo().equals(entrada))
-					.toList();
+			gameVendiveis = rm.allGames.stream().filter(x -> x.getGame().getEstado().equals(Estado.VendaDisponivel)
+					&& x.getGame().getCodigo().equals(entrada)).toList();
 		}
 		if (gameVendiveis.isEmpty()) {
 			System.out.println("Erro: Game não encontrado");
@@ -274,6 +276,7 @@ public class SystemManager {
 				gameVendiveis.get(i);
 				gameVendiveis.get(i).getGame().setReceita(receita);
 				gameVendiveis.get(i).getGame().setEstado(Estado.Vendido);
+				gameVendiveis.get(i).setUsuario(usuario);
 			}
 			System.out.println(qte + " unidade(s) do jogo " + titulo + " vendida(s) com sucesso");
 		} else {
@@ -284,14 +287,12 @@ public class SystemManager {
 	// SISTEMA ALUGUEL - EMPRESTAR E RECEBER
 	// ###############################################################################
 	public void emprestar(String entrada, User usuario, int qte) {
-		List<RegistroGame> gameAlugaveis = rm.gamesParaAlugar.stream().filter(
+		List<RegistroGame> gameAlugaveis = rm.allGames.stream().filter(
 				x -> x.getGame().getEstado().equals(Estado.AluguelDisponivel) && x.getGame().getNome().equals(entrada))
 				.toList();
 		if (gameAlugaveis.isEmpty()) {
-			gameAlugaveis = rm.gamesParaAlugar.stream()
-					.filter(x -> x.getGame().getEstado().equals(Estado.AluguelDisponivel)
-							&& x.getGame().getCodigo().equals(entrada))
-					.toList();
+			gameAlugaveis = rm.allGames.stream().filter(x -> x.getGame().getEstado().equals(Estado.AluguelDisponivel)
+					&& x.getGame().getCodigo().equals(entrada)).toList();
 		}
 		if (gameAlugaveis.isEmpty()) {
 			System.out.println("Erro: Game não encontrado");
@@ -304,6 +305,7 @@ public class SystemManager {
 				gameAlugaveis.get(i);
 				gameAlugaveis.get(i).getGame().setReceita(receita);
 				gameAlugaveis.get(i).getGame().setEstado(Estado.Alugado);
+				gameAlugaveis.get(i).setUsuario(usuario);
 			}
 			System.out.println(qte + " unidade(s) do jogo " + titulo + " alugada(s) com sucesso");
 		} else {
@@ -312,11 +314,11 @@ public class SystemManager {
 	}
 
 	public void receber(String entrada, User usuario, int qte) {
-		List<RegistroGame> gameAlugados = rm.gamesParaAlugar.stream()
+		List<RegistroGame> gameAlugados = rm.allGames.stream()
 				.filter(x -> x.getGame().getEstado().equals(Estado.Alugado) && x.getGame().getNome().equals(entrada))
 				.toList();
 		if (gameAlugados.isEmpty()) {
-			gameAlugados = rm.gamesParaAlugar.stream().filter(
+			gameAlugados = rm.allGames.stream().filter(
 					x -> x.getGame().getEstado().equals(Estado.Alugado) && x.getGame().getCodigo().equals(entrada))
 					.toList();
 		}
@@ -329,6 +331,7 @@ public class SystemManager {
 			for (int i = 0; i < qte; i++) {
 				gameAlugados.get(i);
 				gameAlugados.get(i).getGame().setEstado(Estado.AluguelDisponivel);
+				gameAlugados.get(i).setUsuario(null);
 			}
 			System.out.println(qte + " unidade(s) do jogo " + titulo + " recebida(s) com sucesso");
 		} else {

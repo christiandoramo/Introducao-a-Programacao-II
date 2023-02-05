@@ -1,4 +1,4 @@
-package projeto2va;
+package application;
 
 public class User {
 	private int id;
